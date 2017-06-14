@@ -60,7 +60,25 @@ namespace FacebookPollCounter.Helpers
         public static string GetVotes(string comment)
         {
             var matches = _numberRegex.Matches(comment);
-            return string.Join(",", matches.OfType<Match>().Select(m => m.Value).ToArray());
+            return string.Join(",", matches.OfType<Match>().Select(m => HindiToArabicNumbers(m.Value)).ToArray());
+        }
+
+        private static string HindiToArabicNumbers(string number)
+        {
+            string arabicNumber = string.Empty;
+            foreach (var c in number)
+            {
+                if (char.IsDigit(c))
+                {
+                    arabicNumber += char.GetNumericValue(c);
+                }
+                else
+                {
+                    arabicNumber += c;
+                }
+            }
+
+            return arabicNumber;
         }
     }
 }

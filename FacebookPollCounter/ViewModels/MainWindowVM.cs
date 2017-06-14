@@ -53,6 +53,13 @@ namespace FacebookPollCounter.ViewModels
             set { SetProperty(ref _isBusy, value); }
         }
 
+        private string _progress;
+        public string Progress
+        {
+            get { return _progress; }
+            set { SetProperty(ref _progress, value); }
+        }
+
         #endregion
 
         #region Commands
@@ -72,6 +79,8 @@ namespace FacebookPollCounter.ViewModels
                 (Application.Current as App).Settings.PostUrl = PostUrl;
                 (Application.Current as App).Settings.FilePath = Path;
 
+                Progress = "Getting Post Id...";
+
                 var postId = await FacebookHelper.GetPostIdFromUrl(Token, PostUrl);
 
                 if (postId == null)
@@ -80,6 +89,8 @@ namespace FacebookPollCounter.ViewModels
                     IsBusy = false;
                     return;
                 }
+
+                Progress = "Downloading comments...";
 
                 var list = new List<Comment>();
                 int totalComments = 1;
@@ -95,7 +106,11 @@ namespace FacebookPollCounter.ViewModels
                     after = pagedList.Paging.Cursors.After;
                     list.AddRange(pagedList.Children);
 
+                    Progress = $"Downloading comments ({list.Count} of {totalComments})...";
+
                 } while (list.Count < totalComments);
+
+                Progress = "Saving Excel file...";
 
                 SLExcelData data = GetNewDataObject();
                 foreach (var comment in list)

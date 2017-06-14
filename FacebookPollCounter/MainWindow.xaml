@@ -4,9 +4,60 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FacebookPollCounter"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Title="Facebook Poll Counter" Height="400" Width="600">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid >
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="FontWeight" Value="Light" />
+                    <Setter Property="Margin" Value="5, 5, 10, 5" />
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="Padding" Value="3"/>
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+                <Style TargetType="Button">
+                    <Setter Property="Padding" Value="10, 5" />
+                    <Setter Property="Margin" Value="5" />
+                </Style>
+            </Grid.Resources>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Access Token: " Grid.Row="0" Grid.Column="0" />
+            <TextBox Grid.Row="0" Grid.Column="1"/>
+            <Button Content="Help" Grid.Row="0" Grid.Column="2" />
+
+            <TextBlock Text="Save Path: " Grid.Row="1" Grid.Column="0"/>
+            <TextBox Grid.Row="1" Grid.Column="1"/>
+            <Button Content="Browse" Grid.Row="1" Grid.Column="2" />
+
+            <TextBlock Text="Post URL: " Grid.Row="2" Grid.Column="0"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
+        </Grid>
+
+        <Button Grid.Row="1" Padding="25, 10" FontSize="18" HorizontalAlignment="Center" Content="Save" />
     </Grid>
 </Window>

@@ -47,17 +47,17 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Access Token: " Grid.Row="0" Grid.Column="0" />
-            <TextBox Grid.Row="0" Grid.Column="1"/>
-            <Button Content="Help" Grid.Row="0" Grid.Column="2" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Token}"/>
+            <Button Content="Help" Grid.Row="0" Grid.Column="2" Command="{Binding HelpCommand}" />
 
             <TextBlock Text="Save Path: " Grid.Row="1" Grid.Column="0"/>
-            <TextBox Grid.Row="1" Grid.Column="1"/>
-            <Button Content="Browse" Grid.Row="1" Grid.Column="2" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path}"/>
+            <Button Content="Browse" Grid.Row="1" Grid.Column="2" Command="{Binding BrowseCommand}"/>
 
             <TextBlock Text="Post URL: " Grid.Row="2" Grid.Column="0"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PostUrl}"/>
         </Grid>
 
-        <Button Grid.Row="1" Padding="25, 10" FontSize="18" HorizontalAlignment="Center" Content="Save" />
+        <Button Grid.Row="1" Padding="25, 10" FontSize="18" HorizontalAlignment="Center" Content="Save" Command="{Binding SaveCommand}"/>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FacebookPollCounter.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace FacebookPollCounter
     {
         public MainWindow()
         {
+            DataContext = new MainWindowVM();
             InitializeComponent();
         }
     }

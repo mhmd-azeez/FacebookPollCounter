@@ -11,30 +11,32 @@ namespace FacebookPollCounter
     {
         public T this[int i]
         {
-            get => Data[i];
+            get => Children[i];
         }
 
-        public List<T> Data { get; set; }
+        public List<T> Children { get; set; }
         public Paging Paging { get; set; }
         public Summary Summary { get; set; }
     }
 
     public class Cursors
     {
-        public string before { get; set; }
-        public string after { get; set; }
+        public string Before { get; set; }
+        public string After { get; set; }
     }
 
     public class Paging
     {
-        public Cursors cursors { get; set; }
-        public string next { get; set; }
+        public Cursors Cursors { get; set; }
+        public string Next { get; set; }
     }
 
     public class Summary
     {
-        public string order { get; set; }
-        public int total_count { get; set; }
-        public bool can_comment { get; set; }
+        public string Order { get; set; }
+        [JsonProperty("total_count")]
+        public int TotalCount { get; set; }
+        [JsonProperty("can_comment")]
+        public bool CanComment { get; set; }
     }
 }

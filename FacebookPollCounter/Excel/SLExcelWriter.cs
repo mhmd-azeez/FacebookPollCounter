@@ -9,9 +9,9 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace FacebookPollCounter.Excel
 {
-    public class SLExcelWriter
+    public static class SLExcelWriter
     {
-        private string ColumnLetter(int intCol)
+        private static string ColumnLetter(int intCol)
         {
             var intFirstLetter = ((intCol) / 676) + 64;
             var intSecondLetter = ((intCol % 676) / 26) + 64;
@@ -24,7 +24,7 @@ namespace FacebookPollCounter.Excel
             return string.Concat(firstLetter, secondLetter, thirdLetter).Trim();
         }
 
-        private Cell CreateTextCell(string header, UInt32 index, string text)
+        private static Cell CreateTextCell(string header, UInt32 index, string text)
         {
             var cell = new Cell
             {
@@ -39,7 +39,7 @@ namespace FacebookPollCounter.Excel
             return cell;
         }
 
-        public byte[] GenerateExcel(SLExcelData data)
+        public static byte[] GenerateExcel(SLExcelData data)
         {
             var stream = new MemoryStream();
             using (var document = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook))

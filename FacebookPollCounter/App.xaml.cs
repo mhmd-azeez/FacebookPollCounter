@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FacebookPollCounter.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,16 @@ namespace FacebookPollCounter
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            Settings = Settings.Load();
+        }
+
+        public Settings Settings { get; private set; }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            Settings.Save();
+        }
     }
 }

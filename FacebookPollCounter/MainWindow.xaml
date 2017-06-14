@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FacebookPollCounter"
+        xmlns:controls="clr-namespace:FacebookPollCounter.Controls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         Title="Facebook Poll Counter" Height="400" Width="600">
-
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="bool2Visibility" />
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -56,8 +59,12 @@
 
             <TextBlock Text="Post URL: " Grid.Row="2" Grid.Column="0"/>
             <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PostUrl}"/>
+
+            
         </Grid>
 
         <Button Grid.Row="1" Padding="25, 10" FontSize="18" HorizontalAlignment="Center" Content="Save" Command="{Binding SaveCommand}"/>
+
+        <controls:Spinner Visibility="{Binding IsBusy, Converter={StaticResource bool2Visibility}}" Grid.ColumnSpan="3" Grid.RowSpan="2" LoadingText="{Binding LoadingText}" Margin="-10"/>
     </Grid>
 </Window>

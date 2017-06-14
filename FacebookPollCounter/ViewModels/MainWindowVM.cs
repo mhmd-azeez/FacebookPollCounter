@@ -89,7 +89,7 @@ namespace FacebookPollCounter.ViewModels
                 foreach (var comment in list)
                 {
                     data.DataRows.Add(new List<string>() { comment.From.Id, comment.From.Name,
-                        comment.CreatedTime.ToString("g"), comment.Message });
+                        comment.CreatedTime.ToString("g"), comment.Message, FacebookHelper.GetVotes(comment.Message) });
                 }
 
                 byte[] file = SLExcelWriter.GenerateExcel(data);
@@ -112,7 +112,7 @@ namespace FacebookPollCounter.ViewModels
         {
             var data = new SLExcelData();
             data.SheetName = "Poll";
-            data.Headers = new List<string>() { "Person Id", "Person Name", "Date", "Comment" };
+            data.Headers = new List<string>() { "Person Id", "Person Name", "Date", "Comment", "Vote" };
 
             return data;
         }

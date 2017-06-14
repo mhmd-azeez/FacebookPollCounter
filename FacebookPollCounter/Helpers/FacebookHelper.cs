@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FacebookPollCounter.Helpers
@@ -20,8 +21,9 @@ namespace FacebookPollCounter.Helpers
         }
         private static HttpClient _client;
         private static string _baseApiUrl = "https://graph.facebook.com/v2.9/";
+        private static Regex _numberRegex = new Regex(@"([\d٠١٢٣٤٥٦٧٨٩]+)", RegexOptions.Compiled);
 
-        public static async Task<PagedList<Comment>> GetComments(string token, string postId, string from, int limit = 1000)
+        public static async Task<PagedList<Comment>> GetComments(string token, string postId, string from, int limit = 250)
         {
             var requestUrl = $"{postId}/comments?access_token={token}&total_count=1&order=chronological&filter=stream&summary=1&limit={limit}";
 
@@ -53,6 +55,12 @@ namespace FacebookPollCounter.Helpers
             }
 
             return null;
+        }
+        
+        public static string GetVotes(string comment)
+        {
+            var matches = _numberRegex.Matches(comment);
+            return string.Join(",", matches.OfType<Match>().Select(m => m.Value).ToArray());
         }
     }
 }

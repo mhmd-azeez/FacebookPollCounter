@@ -73,14 +73,26 @@ namespace FacebookPollCounter.ViewModels
                 (Application.Current as App).Settings.FilePath = Path;
 
                 var postId = await FacebookHelper.GetPostIdFromUrl(Token, PostUrl);
+
+                if (postId == null)
+                {
+                    MessageBox.Show("Could not get the post Id");
+                    IsBusy = false;
+                    return;
+                }
+
                 var list = new List<Comment>();
                 int totalComments = 1;
                 string from = null;
-
+                string after = null;
                 do
                 {
-                    var pagedList = await FacebookHelper.GetComments(Token, postId, from).ConfigureAwait(false);
+                    var pagedList = await FacebookHelper.GetComments(Token, postId, from, after).ConfigureAwait(false);
+                    if (pagedList.Children.Count == 0)
+                        break;
+
                     totalComments = pagedList.Summary.TotalCount;
+                    after = pagedList.Paging.Cursors.After;
                     list.AddRange(pagedList.Children);
 
                 } while (list.Count < totalComments);

@@ -23,9 +23,9 @@ namespace FacebookPollCounter.Helpers
         private static string _baseApiUrl = "https://graph.facebook.com/v2.9/";
         private static Regex _numberRegex = new Regex(@"([\d٠١٢٣٤٥٦٧٨٩]+)", RegexOptions.Compiled);
 
-        public static async Task<PagedList<Comment>> GetComments(string token, string postId, string from, int limit = 250)
+        public static async Task<PagedList<Comment>> GetComments(string token, string postId, string from, string after = null, int limit = 250)
         {
-            var requestUrl = $"{postId}/comments?access_token={token}&total_count=1&order=chronological&filter=stream&summary=1&limit={limit}";
+            var requestUrl = $"{postId}/comments?access_token={token}&total_count=1&order=chronological&filter=stream&summary=1&limit={limit}{(after == null ? string.Empty : "&after="+after)}";
 
             var response = await _client.GetAsync(requestUrl).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)

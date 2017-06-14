@@ -14,6 +14,7 @@ namespace FacebookPollCounter
             get => Children[i];
         }
 
+        [JsonProperty("data")]
         public List<T> Children { get; set; }
         public Paging Paging { get; set; }
         public Summary Summary { get; set; }

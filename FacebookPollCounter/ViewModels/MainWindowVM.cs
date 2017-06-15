@@ -114,6 +114,8 @@ namespace FacebookPollCounter.ViewModels
                 do
                 {
                     var pagedList = await FacebookHelper.GetComments(Token, postId, from, after).ConfigureAwait(false);
+
+                    if (pagedList == null) throw new InvalidDataException();
                     if (pagedList.Children.Count == 0)
                         break;
 
@@ -143,6 +145,10 @@ namespace FacebookPollCounter.ViewModels
                 }
             }
             catch (OperationCanceledException)
+            {
+                _tokenSource = new CancellationTokenSource();
+            }
+            catch (InvalidDataException)
             {
 
             }

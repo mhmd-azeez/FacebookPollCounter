@@ -35,6 +35,12 @@ namespace FacebookPollCounter.Helpers
                 var json = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<PagedList<Comment>>(json);
             }
+            else
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var error = JsonConvert.DeserializeObject<ErrorResponse>(json);
+                MessageBox.Show("Facebook: " + error.Error.Message);
+            }
 
             return null;
         }

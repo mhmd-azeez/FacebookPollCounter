@@ -141,6 +141,7 @@ namespace FacebookPollCounter.ViewModels
                 byte[] file = SLExcelWriter.GenerateExcel(data);
                 using (var fileStream = new FileStream(Path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
+                    fileStream.SetLength(file.Length);
                     await fileStream.WriteAsync(file, 0, file.Length);
                 }
             }

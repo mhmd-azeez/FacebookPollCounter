@@ -18,7 +18,6 @@ namespace FacebookPollCounter.ViewModels
     public class MainWindowVM : BindableBase, IDataErrorInfo
     {
         #region Fields
-        private const string TOKEN_HELP_URL = "https://rebrand.ly/FbPollToken";
         private CancellationTokenSource _tokenSource;
         #endregion
 
@@ -32,7 +31,6 @@ namespace FacebookPollCounter.ViewModels
 
             SaveCommand = new DelegateCommand(Save, o => Error == string.Empty);
             BrowseCommand = new DelegateCommand(o => SetPath((Window)o));
-            HelpCommand = new DelegateCommand(o => Process.Start(TOKEN_HELP_URL));
             CancelCommand = new DelegateCommand(o => _tokenSource.Cancel());
 
             IsLoginVisible = (Application.Current as App).Settings.TokenExpirationDate < DateTime.Now;
@@ -80,7 +78,6 @@ namespace FacebookPollCounter.ViewModels
         #region Commands
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand BrowseCommand { get; set; }
-        public DelegateCommand HelpCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
         #endregion
 

@@ -14,3 +14,6 @@ A simple app to count the votes on a facebook post.
  - Click on "Get user access token"
  - If the post is public you don't have to select any of the permissions
  
+## How to get the URL of any facebook post
+ - Click on the timestamp of the post
+ - Copy the address bar URL

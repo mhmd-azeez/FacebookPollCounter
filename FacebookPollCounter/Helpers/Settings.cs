@@ -13,6 +13,7 @@ namespace FacebookPollCounter.Helpers
         public string AccessToken { get; set; }
         public string FilePath { get; set; }
         public string PostUrl { get; set; }
+        public DateTime TokenExpirationDate { get; set; }
 
         public void Save()
         {

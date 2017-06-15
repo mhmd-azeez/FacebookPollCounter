@@ -24,6 +24,7 @@ namespace FacebookPollCounter.Helpers
         private static HttpClient _client;
         private static string _baseApiUrl = "https://graph.facebook.com/v2.9/";
         private static Regex _numberRegex = new Regex(@"([\d٠١٢٣٤٥٦٧٨٩]+)", RegexOptions.Compiled);
+        public const string APP_ID = "108678209685280";
 
         public static async Task<PagedList<Comment>> GetComments(string token, string postId, string from, string after = null, int limit = 250)
         {
@@ -87,7 +88,7 @@ namespace FacebookPollCounter.Helpers
 
             return null;
         }
-        
+
         public static string GetVotes(string comment)
         {
             var matches = _numberRegex.Matches(comment);

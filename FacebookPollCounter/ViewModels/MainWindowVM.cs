@@ -27,7 +27,6 @@ namespace FacebookPollCounter.ViewModels
         {
             _tokenSource = new CancellationTokenSource();
 
-            Token = (Application.Current as App).Settings.AccessToken;
             PostUrl = (Application.Current as App).Settings.PostUrl;
             Path = (Application.Current as App).Settings.FilePath;
 
@@ -35,6 +34,8 @@ namespace FacebookPollCounter.ViewModels
             BrowseCommand = new DelegateCommand(o => SetPath((Window)o));
             HelpCommand = new DelegateCommand(o => Process.Start(TOKEN_HELP_URL));
             CancelCommand = new DelegateCommand(o => _tokenSource.Cancel());
+
+            IsLoginVisible = (Application.Current as App).Settings.TokenExpirationDate < DateTime.Now;
         }
         #endregion
 
@@ -44,13 +45,6 @@ namespace FacebookPollCounter.ViewModels
         {
             get { return _path; }
             set { SetProperty(ref _path, value); }
-        }
-
-        private string _token;
-        public string Token
-        {
-            get { return _token; }
-            set { SetProperty(ref _token, value); }
         }
 
         private string _postUrl;
@@ -73,6 +67,14 @@ namespace FacebookPollCounter.ViewModels
             get { return _progress; }
             set { SetProperty(ref _progress, value); }
         }
+
+        private bool _isLoginVisible;
+        public bool IsLoginVisible
+        {
+            get { return _isLoginVisible; }
+            set { SetProperty(ref _isLoginVisible, value); }
+        }
+
         #endregion
 
         #region Commands
@@ -88,14 +90,15 @@ namespace FacebookPollCounter.ViewModels
             IsBusy = true;
             try
             {
+                var token = (Application.Current as App).Settings.AccessToken;
+
                 // Save settings
-                (Application.Current as App).Settings.AccessToken = Token;
                 (Application.Current as App).Settings.PostUrl = PostUrl;
                 (Application.Current as App).Settings.FilePath = Path;
 
                 Progress = "Getting Post Id...";
 
-                var postId = await FacebookHelper.GetPostIdFromUrl(Token, PostUrl);
+                var postId = await FacebookHelper.GetPostIdFromUrl(token, PostUrl);
 
                 if (postId == null)
                 {
@@ -113,7 +116,7 @@ namespace FacebookPollCounter.ViewModels
                 string after = null;
                 do
                 {
-                    var pagedList = await FacebookHelper.GetComments(Token, postId, from, after).ConfigureAwait(false);
+                    var pagedList = await FacebookHelper.GetComments(token, postId, from, after).ConfigureAwait(false);
 
                     if (pagedList == null) throw new InvalidDataException();
                     if (pagedList.Children.Count == 0)
@@ -207,8 +210,6 @@ namespace FacebookPollCounter.ViewModels
                     error = ValidatePath(error);
                 if (anyProperty || columnName == nameof(PostUrl))
                     error = ValidateUrl(error);
-                if (anyProperty || columnName == nameof(Token))
-                    error = ValidateToken(error);
 
                 if (_oldError != error)
                 {
@@ -226,14 +227,6 @@ namespace FacebookPollCounter.ViewModels
                 return "Path must not be empty.";
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(Path)))
                 return "The chosen directory does not exist.";
-
-            return defaultValue;
-        }
-
-        private string ValidateToken(string defaultValue)
-        {
-            if (string.IsNullOrWhiteSpace(Token))
-                return "Access token must not be empty.";
 
             return defaultValue;
         }

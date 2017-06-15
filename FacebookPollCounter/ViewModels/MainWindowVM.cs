@@ -144,6 +144,8 @@ namespace FacebookPollCounter.ViewModels
                     fileStream.SetLength(file.Length);
                     await fileStream.WriteAsync(file, 0, file.Length);
                 }
+
+                Process.Start(Path);
             }
             catch (OperationCanceledException)
             {

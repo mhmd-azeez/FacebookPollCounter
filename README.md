@@ -5,3 +5,5 @@ A simple app to count the votes on a facebook page
  - Go to [https://developers.facebook.com/tools/explorer/](https://developers.facebook.com/tools/explorer/)
  - Click on "Get Token"
  - Click on "Get user access token"
+ - If the post is public you don't have to select any of the permissions
+ 

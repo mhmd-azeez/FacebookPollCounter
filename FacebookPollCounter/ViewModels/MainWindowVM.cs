@@ -1,6 +1,7 @@
 ﻿using FacebookPollCounter.Excel;
 using FacebookPollCounter.Helpers;
 using FacebookPollCounter.Mvvm;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,7 @@ namespace FacebookPollCounter.ViewModels
             Path = (Application.Current as App).Settings.FilePath;
 
             SaveCommand = new DelegateCommand(Save, o => Error == string.Empty);
+            BrowseCommand = new DelegateCommand(o => SetPath((Window)o));
         }
         #endregion
 
@@ -147,6 +149,20 @@ namespace FacebookPollCounter.ViewModels
         private void ValidationErrorStatusChanged()
         {
             SaveCommand.RaiseCanExecuteChanged();
+        }
+
+        private void SetPath(Window owner)
+        {
+            var dialog = new SaveFileDialog();
+            dialog.Filter = "Excel Workbook|*.xlsx";
+            dialog.Title = "Choose a location to save the file in";
+
+            var result = dialog.ShowDialog(owner);
+
+            if (result == true)
+            {
+                Path = dialog.FileName;
+            }
         }
         #endregion
 

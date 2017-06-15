@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FacebookPollCounter"
         xmlns:controls="clr-namespace:FacebookPollCounter.Controls"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" x:Name="window"
         Title="Facebook Poll Counter" Height="400" Width="600">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="bool2Visibility" />
@@ -60,7 +60,7 @@
 
             <TextBlock Text="Save Path: " Grid.Row="1" Grid.Column="0"/>
             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
-            <Button Content="Browse" Grid.Row="1" Grid.Column="2" Command="{Binding BrowseCommand}"/>
+            <Button Content="Browse" Grid.Row="1" Grid.Column="2" Command="{Binding BrowseCommand}" CommandParameter="{Binding ElementName=window}"/>
 
             <TextBlock Text="Post URL: " Grid.Row="2" Grid.Column="0"/>
             <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PostUrl, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>

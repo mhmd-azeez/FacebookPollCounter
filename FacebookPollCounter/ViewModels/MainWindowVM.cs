@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,10 @@ namespace FacebookPollCounter.ViewModels
 {
     public class MainWindowVM : BindableBase, IDataErrorInfo
     {
+        #region Fields
+        private const string TOKEN_HELP_URL = "https://rebrand.ly/FbPollToken";
+        #endregion
+
         #region Constructor
         public MainWindowVM()
         {
@@ -24,6 +29,7 @@ namespace FacebookPollCounter.ViewModels
 
             SaveCommand = new DelegateCommand(Save, o => Error == string.Empty);
             BrowseCommand = new DelegateCommand(o => SetPath((Window)o));
+            HelpCommand = new DelegateCommand(o => Process.Start(TOKEN_HELP_URL));
         }
         #endregion
 

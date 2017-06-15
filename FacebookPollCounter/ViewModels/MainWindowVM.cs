@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,11 +19,14 @@ namespace FacebookPollCounter.ViewModels
     {
         #region Fields
         private const string TOKEN_HELP_URL = "https://rebrand.ly/FbPollToken";
+        private CancellationTokenSource _tokenSource;
         #endregion
 
         #region Constructor
         public MainWindowVM()
         {
+            _tokenSource = new CancellationTokenSource();
+
             Token = (Application.Current as App).Settings.AccessToken;
             PostUrl = (Application.Current as App).Settings.PostUrl;
             Path = (Application.Current as App).Settings.FilePath;
@@ -30,6 +34,7 @@ namespace FacebookPollCounter.ViewModels
             SaveCommand = new DelegateCommand(Save, o => Error == string.Empty);
             BrowseCommand = new DelegateCommand(o => SetPath((Window)o));
             HelpCommand = new DelegateCommand(o => Process.Start(TOKEN_HELP_URL));
+            CancelCommand = new DelegateCommand(o => _tokenSource.Cancel());
         }
         #endregion
 
@@ -74,6 +79,7 @@ namespace FacebookPollCounter.ViewModels
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand BrowseCommand { get; set; }
         public DelegateCommand HelpCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
         #endregion
 
         #region Methods
@@ -93,11 +99,12 @@ namespace FacebookPollCounter.ViewModels
 
                 if (postId == null)
                 {
-                    MessageBox.Show("Could not get the post Id");
+                    MessageBox.Show("Could not get the post/page Id");
                     IsBusy = false;
                     return;
                 }
 
+                _tokenSource.Token.ThrowIfCancellationRequested();
                 Progress = "Downloading comments...";
 
                 var list = new List<Comment>();
@@ -114,10 +121,12 @@ namespace FacebookPollCounter.ViewModels
                     after = pagedList.Paging.Cursors.After;
                     list.AddRange(pagedList.Children);
 
+                    _tokenSource.Token.ThrowIfCancellationRequested();
                     Progress = $"Downloading comments ({list.Count} of {totalComments})...";
 
                 } while (list.Count < totalComments);
 
+                _tokenSource.Token.ThrowIfCancellationRequested();
                 Progress = "Saving Excel file...";
 
                 SLExcelData data = GetNewDataObject();
@@ -128,10 +137,14 @@ namespace FacebookPollCounter.ViewModels
                 }
 
                 byte[] file = SLExcelWriter.GenerateExcel(data);
-                using (var fileStream = File.Create(Path, file.Length))
+                using (var fileStream = new FileStream(Path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
                     await fileStream.WriteAsync(file, 0, file.Length);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+
             }
             catch (Exception ex)
             {

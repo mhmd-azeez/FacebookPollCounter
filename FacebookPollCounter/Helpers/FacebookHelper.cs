@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FacebookPollCounter.FacebookAPI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,12 +45,12 @@ namespace FacebookPollCounter.Helpers
             var pageName = parts.First();
             string postId;
             
-            if (url.Contains("/posts/"))
+            if (parts.Length >= 3 && url.Contains("/posts/"))
             {
                 // url format: https://www.facebook.com/{page_name}/posts/{post_id}
-                postId = parts.Last().Split(new char[] { ':', '?' }).First();
+                postId = parts[2].Split(new char[] { ':', '?' }).First();
             }
-            else if (url.Contains("/photos/") || url.Contains("/vidoes/"))
+            else if (parts.Length >= 4 &&  url.Contains("/photos/") || url.Contains("/videos/"))
             {
                 // url format: https://www.facebook.com/{page_name}/{photos|vidoes}/pcb.812370652242430/{post_id}/?type=3&theater
                 postId = parts[3].Split(new char[] { ':', '?' }).First();
@@ -69,6 +70,13 @@ namespace FacebookPollCounter.Helpers
                 var creator = JsonConvert.DeserializeObject<Item>(json);
 
                 return $"{creator.Id}_{postId}";
+            }
+            else
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var error = JsonConvert.DeserializeObject<ErrorResponse>(json);
+
+                MessageBox.Show("Facebook: " + error.Error.Message);
             }
 
             return null;

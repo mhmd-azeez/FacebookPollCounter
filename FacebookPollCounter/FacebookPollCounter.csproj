@@ -62,6 +62,7 @@
     <Compile Include="Controls\Spinner.xaml.cs">
       <DependentUpon>Spinner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FacebookAPI\Error.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Page Include="Controls\Spinner.xaml">

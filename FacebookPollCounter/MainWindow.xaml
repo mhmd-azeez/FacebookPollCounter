@@ -28,6 +28,11 @@
                     <Setter Property="FontWeight" Value="SemiBold" />
                     <Setter Property="Padding" Value="3"/>
                     <Setter Property="Margin" Value="5"/>
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
                 <Style TargetType="Button">
                     <Setter Property="Padding" Value="10, 5" />
@@ -50,15 +55,15 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Access Token: " Grid.Row="0" Grid.Column="0" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Token}"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Token, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
             <Button Content="Help" Grid.Row="0" Grid.Column="2" Command="{Binding HelpCommand}" />
 
             <TextBlock Text="Save Path: " Grid.Row="1" Grid.Column="0"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
             <Button Content="Browse" Grid.Row="1" Grid.Column="2" Command="{Binding BrowseCommand}"/>
 
             <TextBlock Text="Post URL: " Grid.Row="2" Grid.Column="0"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PostUrl}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PostUrl, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
 
             
         </Grid>

@@ -3,6 +3,7 @@ using FacebookPollCounter.Helpers;
 using FacebookPollCounter.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ using System.Windows;
 
 namespace FacebookPollCounter.ViewModels
 {
-    public class MainWindowVM : BindableBase
+    public class MainWindowVM : BindableBase, IDataErrorInfo
     {
         #region Constructor
         public MainWindowVM()
@@ -20,7 +21,7 @@ namespace FacebookPollCounter.ViewModels
             PostUrl = (Application.Current as App).Settings.PostUrl;
             Path = (Application.Current as App).Settings.FilePath;
 
-            SaveCommand = new DelegateCommand(Save);
+            SaveCommand = new DelegateCommand(Save, o => Error == string.Empty);
         }
         #endregion
 
@@ -59,7 +60,6 @@ namespace FacebookPollCounter.ViewModels
             get { return _progress; }
             set { SetProperty(ref _progress, value); }
         }
-
         #endregion
 
         #region Commands
@@ -143,6 +143,71 @@ namespace FacebookPollCounter.ViewModels
 
             return data;
         }
+
+        private void ValidationErrorStatusChanged()
+        {
+            SaveCommand.RaiseCanExecuteChanged();
+        }
         #endregion
+
+        #region IDataErrorInfo
+        private string _oldError;
+
+        public string Error => this[null];
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = string.Empty;
+                var anyProperty = columnName == null;
+
+                if (anyProperty || columnName == nameof(Path))
+                    error = ValidatePath();
+                if (anyProperty || columnName == nameof(PostUrl))
+                    error = ValidateUrl();
+                if (anyProperty || columnName == nameof(Token))
+                    error = ValidateToken();
+
+                if (_oldError != error)
+                {
+                    _oldError = error;
+                    ValidationErrorStatusChanged();
+                }
+
+                return error;
+            }
+        }
+
+        private string ValidatePath()
+        {
+            if (string.IsNullOrWhiteSpace(Path))
+                return "Path must not be empty.";
+            if (!Directory.Exists(System.IO.Path.GetDirectoryName(Path)))
+                return "The chosen directory does not exist.";
+
+            return string.Empty;
+        }
+
+        private string ValidateToken()
+        {
+            if (string.IsNullOrWhiteSpace(Token))
+                return "Access token must not be empty.";
+
+            return string.Empty;
+        }
+
+        private string ValidateUrl()
+        {
+            if (string.IsNullOrWhiteSpace(PostUrl))
+                return "Post Url must not be empty.";
+
+            bool validUrl = Uri.TryCreate(PostUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttps);
+            if (!validUrl) return "Invalid Url";
+
+            return string.Empty;
+        }
+        #endregion
+
     }
 }

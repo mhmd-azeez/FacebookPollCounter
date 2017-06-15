@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FacebookPollCounter.Helpers
 {
@@ -41,7 +42,23 @@ namespace FacebookPollCounter.Helpers
         {
             var parts = url.Replace("https://www.facebook.com/", string.Empty).Split('/');
             var pageName = parts.First();
-            var postId = parts.Last().Split(new char[] { ':', '?' }).First();
+            string postId;
+            
+            if (url.Contains("/posts/"))
+            {
+                // url format: https://www.facebook.com/{page_name}/posts/{post_id}
+                postId = parts.Last().Split(new char[] { ':', '?' }).First();
+            }
+            else if (url.Contains("/photos/") || url.Contains("/vidoes/"))
+            {
+                // url format: https://www.facebook.com/{page_name}/{photos|vidoes}/pcb.812370652242430/{post_id}/?type=3&theater
+                postId = parts[3].Split(new char[] { ':', '?' }).First();
+            }
+            else
+            {
+                MessageBox.Show("Unknown Url format, please make sure it's from a facebook Page");
+                return null;
+            }
 
             var requestUrl = $"{pageName}?access_token={token}";
 

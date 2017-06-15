@@ -173,7 +173,7 @@ namespace FacebookPollCounter.ViewModels
         #endregion
 
         #region IDataErrorInfo
-        private string _oldError;
+        private string _oldError = string.Empty;
 
         public string Error => this[null];
 
@@ -185,11 +185,11 @@ namespace FacebookPollCounter.ViewModels
                 var anyProperty = columnName == null;
 
                 if (anyProperty || columnName == nameof(Path))
-                    error = ValidatePath();
+                    error = ValidatePath(error);
                 if (anyProperty || columnName == nameof(PostUrl))
-                    error = ValidateUrl();
+                    error = ValidateUrl(error);
                 if (anyProperty || columnName == nameof(Token))
-                    error = ValidateToken();
+                    error = ValidateToken(error);
 
                 if (_oldError != error)
                 {
@@ -201,25 +201,25 @@ namespace FacebookPollCounter.ViewModels
             }
         }
 
-        private string ValidatePath()
+        private string ValidatePath(string defaultValue)
         {
             if (string.IsNullOrWhiteSpace(Path))
                 return "Path must not be empty.";
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(Path)))
                 return "The chosen directory does not exist.";
 
-            return string.Empty;
+            return defaultValue;
         }
 
-        private string ValidateToken()
+        private string ValidateToken(string defaultValue)
         {
             if (string.IsNullOrWhiteSpace(Token))
                 return "Access token must not be empty.";
 
-            return string.Empty;
+            return defaultValue;
         }
 
-        private string ValidateUrl()
+        private string ValidateUrl(string defaultValue)
         {
             if (string.IsNullOrWhiteSpace(PostUrl))
                 return "Post Url must not be empty.";
@@ -227,7 +227,10 @@ namespace FacebookPollCounter.ViewModels
             bool validUrl = Uri.TryCreate(PostUrl, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttps);
             if (!validUrl) return "Invalid Url";
 
-            return string.Empty;
+            if (!PostUrl.Contains("facebook.com"))
+                return "Please enter a Facebook post's url";
+
+            return defaultValue;
         }
         #endregion
 

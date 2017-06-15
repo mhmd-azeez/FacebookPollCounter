@@ -56,11 +56,11 @@
             </Grid.ColumnDefinitions>
             
             <TextBlock Text="Save Path: " Grid.Row="1" Grid.Column="0"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Browse" Grid.Row="1" Grid.Column="2" Command="{Binding BrowseCommand}" CommandParameter="{Binding ElementName=window}"/>
 
             <TextBlock Text="Post URL: " Grid.Row="2" Grid.Column="0"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PostUrl, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PostUrl, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
 
         </Grid>
 
